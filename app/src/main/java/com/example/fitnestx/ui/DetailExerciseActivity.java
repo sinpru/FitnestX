@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.Player;
@@ -36,6 +37,7 @@ import com.example.fitnestx.data.repository.SessionExerciseRepository;
 import com.example.fitnestx.viewmodel.ExerciseWithSessionStatus;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.example.fitnestx.fragments.TopMenuFragment;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -75,6 +77,9 @@ public class DetailExerciseActivity extends AppCompatActivity {
         initViews();
         // Thiết lập UI và sự kiện
         setupUI();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_top_menu, new TopMenuFragment());
+        transaction.commit();
         // Thiết lập ExoPlayer
         setupPlayer();
 
@@ -123,16 +128,14 @@ public class DetailExerciseActivity extends AppCompatActivity {
             playerView.setShowRewindButton(true);
 
 
-
-
             playerView.setFullscreenButtonClickListener(isFullscreen -> {
                 if (isFullscreen) {
-                   getWindow().getDecorView().setSystemUiVisibility(PlayerView.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                    getWindow().getDecorView().setSystemUiVisibility(PlayerView.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
                     playerView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
                     findViewById(R.id.button_container).setVisibility(View.GONE);
                 } else {
-                  getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-                  float pxheight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,200f,getResources().getDisplayMetrics());
+                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                    float pxheight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,200f,getResources().getDisplayMetrics());
                     ViewGroup.LayoutParams layoutParams = playerView.getLayoutParams();
                     layoutParams.height = (int)pxheight;
                     playerView.setLayoutParams(layoutParams);
@@ -166,7 +169,6 @@ public class DetailExerciseActivity extends AppCompatActivity {
                 Toast.makeText(DetailExerciseActivity.this, "Lỗi phát video: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @OptIn(markerClass = UnstableApi.class)
@@ -182,8 +184,8 @@ public class DetailExerciseActivity extends AppCompatActivity {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-             exerciseEntity = exerciseRepository.getExerciseById(exerciseId);
-             String des = exerciseRepository.GetDesByExId(exerciseId);
+            exerciseEntity = exerciseRepository.getExerciseById(exerciseId);
+            String des = exerciseRepository.GetDesByExId(exerciseId);
             if (exerciseEntity != null) {
                 runOnUiThread(() -> {
                     // Cập nhật UI ở đây

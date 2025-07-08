@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +24,7 @@ import com.example.fitnestx.data.repository.UserMetricsRepository;
 import com.example.fitnestx.data.repository.UserRepository;
 import com.example.fitnestx.data.repository.WorkoutPlanRepository;
 import com.example.fitnestx.data.repository.WorkoutSessionRepository;
+import com.example.fitnestx.fragments.TopMenuFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,9 @@ public class PlanActivity extends AppCompatActivity {
         goalList = new ArrayList<>();
         userRepository = new UserRepository(this);
         userMetricsRepository = new UserMetricsRepository(this);
-
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_top_menu, new TopMenuFragment());
+        transaction.commit();
         initViews();
         setupRecyclerView();
 

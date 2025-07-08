@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +25,7 @@ import com.example.fitnestx.data.repository.ExerciseRepository;
 import com.example.fitnestx.data.repository.MuscleGroupRepository;
 import com.example.fitnestx.data.repository.SessionExerciseRepository;
 import com.example.fitnestx.data.repository.WorkoutSessionRepository;
+import com.example.fitnestx.fragments.TopMenuFragment;
 import com.example.fitnestx.viewmodel.ExerciseWithSessionStatus;
 
 
@@ -81,7 +84,16 @@ public class ExcerciseActivity extends AppCompatActivity {
 //        setupActionRecyclerView();
         reloadExercises();
 
+        // Thêm nút để truy cập danh sách bài tập đơn lẻ
+        Button btnIndividualExercises = findViewById(R.id.btn_individual_exercises);
+        btnIndividualExercises.setOnClickListener(v -> {
+            Intent intent = new Intent(ExcerciseActivity.this, MuscleGroupListActivity.class);
+            startActivity(intent);
+        });
 
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_top_menu, new TopMenuFragment());
+        transaction.commit();
     }
     @Override
     protected void onResume() {
